@@ -56,7 +56,7 @@ CREATE TABLE telefono_alumno(
   idTipoTelefono TINYINT(1),
   idAlumnoTelefono INT,
     CONSTRAINT FK_tipoTelefono FOREIGN KEY (idTipoTelefono) REFERENCES tipo_telefono(id_tipoTelefono),
-    CONSTRAINT FK_alumnoTelefono FOREIGN KEY (alumno) REFERENCES alumno(id_alumno)
+    CONSTRAINT FK_alumnoTelefono FOREIGN KEY (idAlumnoTelefono) REFERENCES alumno(id_alumno)
 );
 
 -- *************** TABLAS PROFESOR *************************
@@ -95,12 +95,67 @@ CREATE TABLE direccion_profesor(
     CONSTRAINT FK_ProfesorDireccion FOREIGN KEY (idProfesor) REFERENCES alumno(id_alumno)
 );
 
+-- Crear tabla telefono_profesor
+
+CREATE TABLE telefono_profesor(
+  id_telefonoProfesor INT PRIMARY KEY,
+  numero BIGINT,
+  idTipoTelefono TINYINT(1),
+  idProfesorTelefono INT,
+    CONSTRAINT FK_tipoTelefonoProf FOREIGN KEY (idTipoTelefono) REFERENCES tipo_telefono(id_tipoTelefono),
+    CONSTRAINT FK_profesorTelefono FOREIGN KEY (idProfesorTelefono) REFERENCES profesor(id_profesor)
+);
+
+
 -- ****************** TABLAS ASIGNATURAS ************************
 
+-- Crear tabla grado
 
+CREATE TABLE grado(
+  id_grado INT PRIMARY KEY,
+  nombreGrado varchar(100)
+);
 
+-- Crear tabla tipo_asignatura
 
+CREATE TABLE tipo_asignatura(
+  id_tipoAsignatura INT PRIMARY KEY,
+  nobmreTipoAsignatura VARCHAR(30)
+);
 
+-- Crear tabla asignatura
 
+CREATE TABLE asignatura(
+  id_asignatura INT PRIMARY KEY,
+  nombreAsignatura VARCHAR(100) not null,
+  creditos FLOAT,
+  curso TINYINT,
+  cuatrimestre TINYINT,
+  idProfesorAsignatura INT,
+  idGradoAsignatura INT,
+  idTipoAsignatura INT,
+    CONSTRAINT FK_ProfesorAsignatura FOREIGN KEY (idProfesorAsignatura) REFERENCES profesor(id_profesor),
+    CONSTRAINT FK_GradoAsignatura FOREIGN KEY (idGradoAsignatura) REFERENCES grado(id_grado),
+    CONSTRAINT FK_TipoAsignatura FOREIGN KEY (idTipoAsignatura) REFERENCES tipo_asignatura(id_tipoAsignatura)
+);
 
+-- ************ MATRICULA *********************
 
+-- Crear tabla curso_escolar
+
+CREATE TABLE curso_escolar(
+  id_cursoEscolar INT PRIMARY KEY,
+  inicioCurso YEAR,
+  finCurso YEAR
+);
+
+-- Crear tabla matricula_alumno
+
+CREATE TABLE matricula_alumno(
+  idAlumnoMatricula INT,
+  idAsignaturaMatricula INT,
+  idCursoMatricula INT,
+    CONSTRAINT FK_AlumnoMatricula FOREIGN KEY (idAlumnoMatricula) REFERENCES alumno(id_alumno),
+    CONSTRAINT FK_AsignaturaMatricula FOREIGN KEY (idAsignaturaMatricula) REFERENCES asignatura(id_asignatura),
+    CONSTRAINT FK_CursoMatricula FOREIGN KEY (idCursoMatricula) REFERENCES curso_escolar(id_cursoEscolar)
+);
